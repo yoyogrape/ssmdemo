@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 处理指令：为了解析文件内容，不同功能xml文件的处理指令不同 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间，目的就是对sql进行分类化管理
+	 对应接口的全类名 -->
+<mapper namespace="com.mybatis.dao.EmployeeDAO">  
+	
+	<!-- 根据id查询雇员信息，同时附带所属的部门信息
+		一对一两种解决方案：1.嵌套查询   2.嵌套结果
+	 -->
+	 
+	<!-- 嵌套查询的方式实现一对一关联的查询 -->
+	<select id="getEmpById2" parameterType="int" resultMap="empResult2">
+		select * from employee where eid=#{eid}
+	</select>
+	<select id="getDpetById2" parameterType="int" resultType="Department">
+		select * from department where did=#{deptid}
+	</select>
+	<resultMap type="Employee" id="empResult2">
+		<!-- 利用association来再关联一个查询
+		property：准备存放部门信息属性名字
+		column：表中外键的列名
+		javaType：子查询所返回的结果的类型
+		select：嵌套的子查询所对应的select元素的id
+		 -->
+		<association property="dept" column="deptid" 
+					javaType="Department" select="getDpetById2"/>
+	</resultMap>
+
+
+	<!-- 嵌套结果的方式实现一对一关联的查询 -->
+	<select id="getEmpById" parameterType="int" resultMap="empResult">
+		select e.*,d.* 
+		from employee e,department d
+		where eid=#{eid} and e.deptid=d.did
+	</select>
+	<resultMap type="Employee" id="empResult">
+		<!-- 利用association来嵌套结果
+			注意：本来能映射到Employee中的属性无法映射到类中去,需要手动 
+		 -->
+		 <result property="eid" column="eid"/>
+		 <result property="eno" column="eno"/>
+		 <result property="ename" column="ename"/>
+		<association property="dept" column="deptid" 
+			javaType="Department" resultMap="deptResult"/>
+	</resultMap>
+	<resultMap type="Department" id="deptResult">
+		<result property="did" column="did"/>
+		<result property="dno" column="dno"/>
+		<result property="dname" column="dname"/>
+	</resultMap>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+    
+    

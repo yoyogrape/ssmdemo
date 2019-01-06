@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 处理指令：为了解析文件内容，不同功能xml文件的处理指令不同 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间，目的就是对sql进行分类化管理
+	 对应接口的全类名 -->
+<mapper namespace="com.mybatis.dao.DepartmentDAO">  
+	
+	<!-- 根据id查询部门信息，同时附带所有员工信息
+	 -->
+	 <select id="getDeptById" parameterType="int" resultMap="deptResult">
+	 	select d.*,e.*
+	 	from employee e,department d
+	 	where e.deptid=d.did and d.did=#{id}
+	 </select>
+	<resultMap type="Department" id="deptResult">
+		<result property="did" column="did"/>
+		<result property="dno" column="dno"/>
+		<result property="dname" column="dname"/>
+		<!-- 一对多关联：用 collection子元素来实现 
+			property：封装到哪里（属性名）
+			ofType：集合容器中元素类型
+		 -->
+		<collection property="list" ofType="Employee">
+			<result property="eid" column="eid"/>	
+			<result property="eno" column="eno"/>
+			<result property="ename" column="ename"/>
+		</collection>
+	</resultMap>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+    
+    

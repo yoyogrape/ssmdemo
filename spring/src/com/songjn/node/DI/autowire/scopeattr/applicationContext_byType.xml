@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean -->
+	<!-- <bean id="mySchool" class="com.songjn.node.DI.autowire.scopeattr.School">
+		<property name="name" value="辽工大"/>
+	</bean> -->
+	<bean id="myxiaoxue" class="com.songjn.node.DI.autowire.scopeattr.小学">
+		<property name="addr" value="阜新"/>
+	</bean>
+	<!-- autowire="byType"会从容器中查找与实体类的域属性类型  具有is-a 关系的bean，并将其自动注入到该域属性 -->
+	<bean id="myStudent" class="com.songjn.node.DI.autowire.scopeattr.Student" autowire="byType">
+		<property name="name" value="haha"></property>
+		<property name="age" value="3"></property>
+	</bean>
+
+</beans>

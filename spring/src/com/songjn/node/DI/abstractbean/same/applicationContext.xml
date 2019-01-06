@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean
+		   同类抽象bean就是去除冗余，继承相同属性的类。
+		   从而优化代码
+	 -->
+	<bean id="studentBase" class="com.songjn.node.DI.abstractbean.same.Student"
+		abstract="true">
+		<property name="school" value="辽工大"></property>
+		<property name="major" value="会计"></property>
+	</bean>
+	<bean id="myStudent1" parent="studentBase">
+		<property name="name" value="haha"></property>
+		<property name="age" value="3"></property>
+	</bean>
+	<bean id="myStudent2" parent="studentBase">
+		<property name="name" value="xixi"></property>
+		<property name="age" value="4"></property>
+	</bean>
+	<bean id="myStudent3" parent="studentBase">
+		<property name="name" value="hehe"></property>
+		<property name="age" value="5"></property>
+	</bean>
+</beans>

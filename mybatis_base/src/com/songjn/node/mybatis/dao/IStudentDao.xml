@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songjn.node.mybatis.dao.IStudentDao">
+	<insert id="insertStudnet" parameterType="Student">
+		insert into student(name,age) value(#{name},#{age})
+	</insert>
+	<!-- 插入后获取主键 -->
+	<insert id="insertStudnetCacheId" parameterType="Student">
+		insert into student(name,age) value(#{name},#{age})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+			<!-- select @@identity -->
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	
+	<delete id="deleteStudentById">
+		<!-- 这里的#{}就是一个占位符，放什么都行  -->
+		delete from student where id=#{xxx}
+	</delete>
+
+	<update id="updateStudent" parameterType="Student">
+		update student set name=#{name},age=#{age} where
+		id=#{id}
+	</update>
+	
+	<!-- 解决数据库字段名称和表名称不一致的情况
+		1.别名
+		2.resultMap
+	 -->
+	<resultMap type="Student" id="studentMapper">
+		<id column="tid" property="id"/>
+		<result column="tname" property="name"/>
+		<result column="tage" property="age"/>
+		<result column="tscore" property="score"/>
+	</resultMap>
+	<select id="selectAllStudnets" resultMap="studentMapper">
+		select tid,tname,tage,tscore from student
+	</select>
+	<!-- 1.别名
+	<select id="selectAllStudnets" resultMap="studentMapper">
+		select tid id,tname name,tage age,tscore score from student
+	</select> -->
+	
+	<select id="selectStudnetById"  parameterType="int" resultType="Student">
+		select id,name,age,score from student where id=#{id}
+	</select>
+	<!-- 模糊查询 -->
+	<select id="selectStudnetsByName"  parameterType="string" resultType="Student">
+		<!-- select id,name,age,score from student where name like concat('%',#{name},'%') -->
+		<!-- 底层动态参数：常用   -->
+		<!-- select id,name,age,score from student where name like '%' #{name} '%' -->
+		<!-- 纯字符串拼接：'%小%'，可以sql注入  -->
+		<!-- select id,name,age,score from student where name like '%${value}%'  -->
+		<!-- 参数处理  -->
+		select id,name,age,score from student where name like #{name}
+	</select>
+	
+
+</mapper>

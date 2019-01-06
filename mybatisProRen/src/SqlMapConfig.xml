@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 处理指令部分 -->
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+         "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 根元素  -->
+<configuration>
+	<!-- properties元素：配置存储数据源中信息值
+		 resource属性：消息资源文件相对src的路径	
+	  	 -->
+	<properties resource="db.properties">
+		<!-- 将密码改为123，消息资源文件中没有将会生效  -->
+		<property name="password" value="123"/>
+	</properties>
+	
+	<!-- setting元素的使用  #报错原因不明#
+		 maxTransaction：最大的事务数
+	<settings maxTransaction="5"/>	
+		-->
+	
+	<!-- 设置类别名 -->
+	<typeAliases>
+		<typeAlias alias="UserInfo" type="com.mybatis.bean.UserInfo"/>
+		<typeAlias alias="Employee" type="com.mybatis.bean.Employee"/>	
+		<typeAlias alias="Department" type="com.mybatis.bean.Department"/>		
+	</typeAliases>
+	
+	<!-- 配置分页插件  -->
+	<plugins >
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<!-- 配置方言 -->
+			<property name="dialect" value="oracle"/>
+		</plugin>
+	</plugins>
+	
+	<!-- 配置数据库的环境  -->
+	<environments default="oracle">
+		<!-- 可以配置多种不同的与数据库的连接，每一个对应一个environment元素  -->
+		<environment id="oracle">
+			<!-- 配置事务管理  -->
+			<transactionManager type="jdbc"/>
+			<!-- 配置数据源 :数据库连接池的方式进行配置  -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}"/>
+				<property name="url" value="${url}"/>
+				<property name="username" value="${username}"/>
+				<property name="password" value="${password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!--将程序中所有SQL映射文件注入  到核心配置文件中  -->
+	<mappers>
+		<!-- 注意点换成斜线 -->
+		<mapper resource="com/mybatis/dao/UserInfo.xml"/> 
+		<mapper resource="com/mybatis/dao/Employee.xml"/>
+		<mapper resource="com/mybatis/dao/Department.xml"/>
+	</mappers>
+</configuration>
+
+
+
+
+
+

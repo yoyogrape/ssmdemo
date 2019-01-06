@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean 
+		 需求一：myStudent的名字和myPerson相同
+		 需求二：myStudent的年龄是小于50 的随机数
+		 需求三：myStudent的名字和myPerson相同
+		 需求四：myStudent的年龄在<18 的时候和myPerson的相同，>18取值18
+		 需求四有两种实现方式:
+		  ①三元运算
+		  ②在Person类中添加方法处理
+	-->
+	<bean id="myPerson" class="com.songjn.node.DI.springEL.Person">
+		<property name="p_name" value="lisi" />
+		<property name="p_age" value="#{T(java.lang.Math).random()*50}" />
+	</bean>
+	<bean id="myStudent" class="com.songjn.node.DI.springEL.Student">
+		<property name="name" value="#{myPerson.p_name}" />
+		<!-- <property name="age" value="#{myPerson.p_age>18?18:myPerson.p_age}" /> -->
+		<property name="age" value="#{myPerson.setProcessAge()}" />
+	</bean>
+
+</beans>

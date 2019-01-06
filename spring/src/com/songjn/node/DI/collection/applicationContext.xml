@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean -->
+	<bean id="mySchool" class="com.songjn.node.DI.collection.School">
+		<property name="name" value="北大" />
+	</bean>
+	<bean id="mySchool2" class="com.songjn.node.DI.collection.School">
+		<property name="name" value="清华" />
+	</bean>
+	<bean id="mySome" class="com.songjn.node.DI.collection.Some">
+		<property name="schools">
+			<array>
+				<ref bean="mySchool" />
+				<ref bean="mySchool2" />
+			</array>
+		</property>
+		<property name="myStrs">
+			<array>
+				<value>中国</value>
+				<value>北京</value>
+			</array>
+		</property>
+		<property name="myList">
+			<list>
+				<value>东城</value>
+				<value>昌平</value>
+			</list>
+		</property>
+		<property name="mySet">
+			<set>
+				<value>haha</value>
+				<value>xixi</value>
+			</set>
+		</property>
+		<property name="myMap">
+			<map>
+				<entry key="mibile" value="12334566" />
+				<entry key="qq" value="5344121" />
+			</map>
+		</property>
+		<property name="myProes">
+			<props>
+				<prop key="sex">男</prop>
+				<prop key="nation">汉</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

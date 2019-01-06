@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean -->
+	<bean id="mySchool" class="com.songjn.node.DI.setter.School">
+		<property name="name" value="辽工大"/>
+	</bean>
+	<bean id="myStudent" class="com.songjn.node.DI.setter.Student">
+		<property name="name" value="haha"></property>
+		<property name="age" value="3"></property>
+		<property name="school" ref="mySchool"></property>
+	</bean>
+
+
+</beans>

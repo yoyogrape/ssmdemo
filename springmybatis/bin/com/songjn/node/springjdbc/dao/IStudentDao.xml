@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songjn.node.springjdbc.dao.IStudentDao">
+	<insert id="insertStudnet" parameterType="com.songjn.node.springjdbc.po.Student">
+		insert into student(name,age) value(#{name},#{age})
+	</insert>
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from student where id=#{id}
+	</delete>
+
+	<update id="updateStudent" parameterType="com.songjn.node.springjdbc.po.Student">
+		update student set name=#{name},age=#{age} where
+		id=#{id}
+	</update>
+
+	<select id="selectStudnetById"  parameterType="java.lang.Integer" resultType="com.songjn.node.springjdbc.po.Student">
+		selete id,name,age from studnet where id=#{id}
+	</select>
+	<select id="selectAllStudnets" resultType="com.songjn.node.springjdbc.po.Student">
+		selete id,name,age from studnet
+	</select>
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean 异类抽象bean就是去除冗余，继承相同属性的类。 从而优化代码 -->
+	<bean id="myTeacher" class="com.songjn.node.DI.multixml.equal.Teacher"
+		parent="base">
+		<property name="name" value="张老师"></property>
+		<property name="age" value="4"></property>
+	</bean>
+	<bean id="myStudent" class="com.songjn.node.DI.multixml.equal.Student"
+		parent="base">
+		<property name="name" value="李学生"></property>
+		<property name="age" value="12"></property>
+	</bean>
+
+
+</beans>

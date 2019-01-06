@@ -1,0 +1,75 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.3.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		
+		<!-- 配置处理器映射器 :中央处理器接收到请求以后用此类来进行请求的分发
+			非注解的处理器映射器:	
+			1.BeanNameUrlHandlerMapping:将请求路径和当前容器里面所管理的控制器的所有控制器对应的bean元素的name相匹配
+		 	注意：默认提供BeanNameUrlHandlerMapping，如果配置了simpleUrlHandlerMapping，默认的就不提供
+		 		容器中可以同时配置多种处理器映射器，真正处理请求时，按照能匹配成功的情况处理；
+		<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+		 -->
+		 
+		<!-- 非注解的处理器映射器：
+			2.simpleUrlHandlerMapping:可以针对某一个控制器设置多种请求路径
+		 -->
+		<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+			<property name="mappings">
+				<props>
+					<!-- key:处理请求的时候指定的路径
+						元素体:指定控制器在当前容器中所配置的bean元素的id
+					  -->
+					<prop key="/query.action">queryIteam</prop>
+					<prop key="/query2.action">queryIteam</prop>
+				</props>
+			</property>
+		</bean>
+		
+		<!-- 处理器适配器
+			根据适配器接口对controller进行包装，不同的适配器针对请求的url去判断哪些controller可以真正的处理请求
+			SimpleControllerHandlerAdapter:默认处理器适配器。可以将所有实现controller接口的bean元素通过该适配器进行执行
+			HttpRequestHandlerAdapter:可以将所有实现HttpRequestHandler接口的bean元素通过该适配器进行执行
+			同一个Spring容器里面可以同时存在多个处理器适配器
+		  -->
+		<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+		<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
+		<!-- 进行响应的配置  -->
+		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+			<!-- 与后缀为.jsp的文件进行匹配  -->
+			<property name="suffix" value=".jsp"></property>
+		</bean>
+		<!-- 需要注意有‘/’  -->
+		<bean name="/login.action" class="com.springmvc.controller.LoginHandler"/>
+		<bean id="queryIteam" class="com.springmvc.controller.QueryController"/>
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

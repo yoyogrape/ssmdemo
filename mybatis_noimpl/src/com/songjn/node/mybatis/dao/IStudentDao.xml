@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songjn.node.mybatis.dao.IStudentDao">
+	<insert id="insertStudnet" parameterType="Student">
+		insert into
+		student(name,age) value(#{name},#{age})
+	</insert>
+	<!-- 插入后获取主键 -->
+	<insert id="insertStudnetCacheId" parameterType="Student">
+		insert into student(name,age) value(#{name},#{age})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+			<!-- select @@identity -->
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<delete id="deleteStudentById">
+		<!-- 这里的#{}就是一个占位符，放什么都行  -->
+		delete from student where id=#{xxx}
+	</delete>
+
+	<update id="updateStudent" parameterType="Student">
+		update student set
+		name=#{name},age=#{age} where
+		id=#{id}
+	</update>
+
+	<select id="selectAllStudnets" resultType="Student">
+		select
+		id,name,age,score from student
+	</select>
+
+	<select id="selectStudnetById" parameterType="int" resultType="Student">
+		select id,name,age,score from student where id=#{id}
+	</select>
+	<!-- 模糊查询 -->
+	<select id="selectStudnetsByName" parameterType="string"
+		resultType="Student">
+		<!--
+			select id,name,age,score from student where name like
+			concat('%',#{name},'%')
+		-->
+
+		<!-- 底层动态参数：常用   -->
+		<!--
+			select id,name,age,score from student where name like '%' #{name} '%'
+		-->
+
+		<!-- 纯字符串拼接：'%小%'，可以sql注入  -->
+		<!--
+			select id,name,age,score from student where name like '%${value}%'
+		-->
+		<!-- 参数处理  -->
+		select id,name,age,score from student where name like #{name}
+	</select>
+	<select id="selectByConditions" parameterType="map" resultType="Student">
+		<!-- 多条件查询  -->
+		select id,name,age,score
+		from student
+		where name like '%' #{nameCon} '%'
+		and age>#{ageCon}
+		and score >#{tianqi.score}
+	</select>
+	<!-- ==============动态sql的实现==============  -->
+	<select id="selectDynamicSqlByIf" resultType="Student">
+		<!-- 动态sql 1）<if>实现  -->
+		select id,name,age,score
+		from student
+		where 1=1
+		<if test="name != null and name!='' ">
+			and name like '%' #{name} '%' 
+		</if>
+		<if test="age>0 and age!=null ">
+			and age>#{age} 
+		</if>
+		<if test="score>0 and score !=null">
+			and score >#{score} 
+		</if>
+	</select>
+	<select id="selectDynamicSqlByWhere" resultType="Student">
+		<!-- 动态sql 2）<where>实现  -->
+		select id,name,age,score
+		from student
+		<where>
+			<if test="name != null and name!='' ">
+				and name like '%' #{name} '%' 
+			</if>
+			<if test="age>0 and age!=null ">
+				and age>#{age} 
+			</if>
+			<if test="score>0 and score !=null">
+				and score >#{score} 
+			</if>
+		</where>
+	</select>
+	<!-- ==============其他标签==============  -->
+
+	<select id="selectDynamicSqlByChoose" resultType="Student">
+		<!-- <foreach>的使用  -->
+		select id,name,age,score
+		from student
+		<where>
+			<choose>
+				<when test="name != null and name!='' ">
+					and name like '%' #{name} '%' 
+				</when>
+				<when test="age>0 and age!=null ">
+					and age>#{age} 
+				</when>
+				<when test="score>0 and score !=null">
+					and score >#{score} 
+				</when>
+				<otherwise>
+					1=2
+				</otherwise>
+			</choose>
+		</where>
+	</select>
+	<select id="selectDynamicSqlByForeach" resultType="Student">
+		<!-- <foreach>遍历数组  -->
+		select id,name,age,score
+		from student
+		<if test="array.length>0">
+			where id in
+			<foreach collection="array" item="myId" open="(" close=")"
+				separator=",">
+				#{myId}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="selectDynamicSqlByForeach2" resultType="Student">
+		<!-- <foreach>遍历集合  -->
+		select id,name,age,score
+		from student
+		<if test="list.size>0">
+			where id in
+			<foreach collection="list" item="myId" open="(" close=")"
+				separator=",">
+				#{myId}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="selectDynamicSqlByForeach3" resultType="Student">
+		<!-- <foreach>遍历自定义的类型的集合  -->
+		select id,name,age,score
+		from student
+		<if test="list.size>0">
+			where score in
+			<foreach collection="list" item="stu" open="(" close=")"
+				separator=",">
+				#{stu.score}
+			</foreach>
+		</if>
+	</select>
+	
+	<!-- ==============sql片段的使用==============  -->
+	
+	<select id="selectDynamicSqlByForeach4" resultType="Student">
+		<!-- <foreach>遍历自定义的类型的集合  -->
+		<include refid="selectColumns"/>
+		from student
+		<if test="list.size>0">
+			where score in
+			<foreach collection="list" item="stu" open="(" close=")"
+				separator=",">
+				#{stu.score}
+			</foreach>
+		</if>
+	</select>
+	<sql id="selectColumns">
+		select id,name,age,score
+	</sql>
+
+</mapper>

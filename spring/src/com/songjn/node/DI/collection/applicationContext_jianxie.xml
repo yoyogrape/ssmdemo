@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean
+		 在这里，String、list、set可以进行简写
+		 引用类型，只有一个ref的可以写
+		 -->
+	<bean id="mySchool" class="com.songjn.node.DI.collection.School">
+		<property name="name" value="北大" />
+	</bean>
+	<!-- <bean id="mySchool2" class="com.songjn.node.DI.collection.School">
+		<property name="name" value="清华" />
+	</bean> -->
+	<bean id="mySome" class="com.songjn.node.DI.collection.Some">
+		<!-- 当有一个引用的时候可以简写 -->
+		<!-- <property name="schools" ref="mySchool"/> -->
+		<property name="schools">
+			<array>
+				<ref bean="mySchool" />
+				<ref bean="mySchool2" />
+			</array>
+		</property>
+		<property name="myStrs" value="中国,北京"/>
+		<property name="myList" value="东城,昌平"/>
+		<property name="mySet" value="haha,xixi"/>
+		<property name="myMap" >
+			<map>
+				<entry key="mibile" value="12334566" />
+				<entry key="qq" value="5344121" />
+			</map>
+		</property>
+		<property name="myProes">
+			<props>
+				<prop key="sex">男</prop>
+				<prop key="nation">汉</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

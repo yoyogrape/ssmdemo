@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!--
+		加载properties文件两种方式: 
+		1）PropertyPlaceholderConfigurer 
+		2）context:property-placeholder
+	-->
+
+	<!-- 加载配置文件方式一：  -->
+	<!--
+		<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location"
+		value="classpath:jdbc.properties"></property> </bean>
+	-->
+
+	<!-- 加载配置文件方式二：  -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	
+	
+	
+	<!-- 注册数据源的三种方式： -->
+
+	<!-- 注册数据源：Spring内置数据源 -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+
+	<!-- 注册数据源：dbcp -->
+	<!--
+		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property> <property
+		name="username" value="${jdbc.username}"></property> <property
+		name="password" value="${jdbc.password}"></property> </bean>
+	-->
+
+	<!--
+		注册数据源：c3p0 <bean id="dataSource"
+		class="com.mchange.v2.c3p0.DriverManagerDataSource"> <property
+		name="driverClass" value="${jdbc.driver}"></property> <property
+		name="jdbcUrl" value="${jdbc.url}"></property> <property name="user"
+		value="${jdbc.username}"></property> <property name="password"
+		value="${jdbc.password}"></property> </bean>
+	-->
+
+
+	<!-- 注册bean -->
+	<bean id="mydao" class="com.songjn.node.springjdbc.dao.impl.StudentDaoImpl">
+		<!-- 可以将数据源直接注入dao -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+
+	<bean id="myService"
+		class="com.songjn.node.springjdbc.service.impl.StudentServiceImpl">
+		<property name="dao" ref="mydao"></property>
+	</bean>
+</beans>

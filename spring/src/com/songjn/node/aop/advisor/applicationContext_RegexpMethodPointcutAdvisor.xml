@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册目标对象 -->
+	<bean id="myService" class="com.songjn.node.aop.advisor.SomeServiceImpl"></bean>
+
+	<!-- 注册切面：通知 -->
+	<bean id="myAdvice" class="com.songjn.node.aop.advisor.MyMethodInterceptor"></bean>
+
+	<!-- 注册切面：顾问：正则匹配RegexpMethodPointcutAdvisor -->
+	<bean id="myAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice" ref="myAdvice"></property>
+		<!-- 2、使用正则表达式进行匹配：匹配的是全限定性方法名（com.songjn.node.aop.Advisor.ISomeService.doFirst）   -->
+		<property name="pattern" value=".*Second"></property>
+	</bean>
+
+
+	<!-- 生成代理对象 -->
+	<bean id="serviceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<!-- <property name="targetName" value="myService"></property> -->
+		<!-- 指定目标对象 -->
+		<property name="target" ref="myService"></property>
+		<!-- 指定切面 -->
+		<!-- <property name="interceptorNames" value="myBeforeAdvice,myAfterAdvice"></property> -->
+		<property name="interceptorNames" value="myAdvisor"></property>
+	</bean>
+
+</beans>

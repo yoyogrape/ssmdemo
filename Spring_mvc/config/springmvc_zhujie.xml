@@ -1,0 +1,92 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.3.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		
+		<!-- 1.1注解形式的处理器映射器，3.1版本以后RequestMappingHandlerMapping 
+		<bean class="org.springframework.web.servlet.mvc.
+						method.annotation.RequestMappingHandlerMapping"/>
+		 -->
+		<!-- 1.2注解形式的处理器适配器3.1版本以后 
+		<bean class="org.springframework.web.servlet.mvc.
+						method.annotation.RequestMappingHandlerAdapter"/>
+		 -->
+		
+		<!-- 2.注解形式的处理器映射器/适配器（等同于上面两句话）
+			validator:校验器对应的bean元素的id
+		-->
+		<mvc:annotation-driven validator="validator"/>
+		 
+		<!-- 组件扫描的方式加载所有配置器 
+			base-package:扫描加载控制器的包。
+		 -->
+		<context:component-scan base-package="com.springmvc.controller"/>
+		
+		<!-- 进行响应的配置  -->
+		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+			<!-- 与后缀为.jsp的文件进行匹配  -->
+			<property name="suffix" value=".jsp"></property>
+		</bean>
+		
+		<!-- ...................................................................... -->
+		
+		<!-- 配置校验器 -->
+		<bean id="validator" 
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+			<!-- 校验器类型：hibernate校验器 -->
+			<property name="providerClass" 
+				value="org.hibernate.validator.HibernateValidator"/>
+			<!-- 指定校验所使用的消息资源文件（ref），在文件中配置校验所需要的所有错误信息  -->
+			<property name="validationMessageSource" ref="messageSource"/>
+		</bean>
+		<!-- 资源文件的配置  -->
+		<bean id="messageSource" 
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+			<!-- 资源文件名 -->
+			<property name="basenames">
+		        <list>
+		      	    <!-- classpath:在src下 -->
+		            <value>classpath:CustomValidationMessage</value>
+		        </list>
+		    </property>
+			<!-- 资源文件编码格式  -->
+			<property name="fileEncodings" value="UTF-8"/>
+			<!-- 对资源文件内容的缓存时间的设置 ，单位：秒  -->
+			<property name="cacheSeconds" value="60"></property>
+		</bean>
+		
+		<!-- 全局异常处理器， 因为实现了HandlerExceptionResolver接口 -->
+		<bean class="com.springmvc.utils.CustomExceptionResolver"/>
+		
+		<!-- 文件上传 -->
+		<bean id="multipartResolver" 
+			class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+			<!-- 设置文件上传的最大尺寸为5MB -->
+			<property name="maxUploadSize">
+				<value>5242880</value>
+			</property>
+		</bean>
+		
+		<!-- 全局拦截器的配置（多个拦截器按顺序执行） -->
+		<mvc:interceptors>
+			<mvc:interceptor>
+				<!-- ‘/**’所有的url包括子url路径 -->
+				<mvc:mapping path="/**"/>
+				<bean class="com.springmvc.utils.LoginInterceptor"/>
+			</mvc:interceptor>
+		</mvc:interceptors>
+</beans>
+

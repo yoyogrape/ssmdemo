@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 注册bean -->
+	<bean id="school" class="com.songjn.node.DI.autowire.scopeattr.School">
+		<property name="name" value="辽工大"/>
+	</bean>
+	<!-- autowire="byName"会从容器中查找与实体类的域属性id相同的bean的id，并将其自动注入到该域属性 -->
+	<bean id="myStudent" class="com.songjn.node.DI.autowire.scopeattr.Student" autowire="byName">
+		<property name="name" value="haha"></property>
+		<property name="age" value="3"></property>
+	</bean>
+
+</beans>

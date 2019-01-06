@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	<display-name>Spring_mvc</display-name>
+	<!-- SpringMVC的中央控制器：DispatcherServlet -->
+	<servlet>
+		<servlet-name>Controller</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 在接收的时候附带初始化参数 -->
+		<init-param>
+			<!-- SpringMVC框架的核心配置文件的路径 -->
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:springmvc_zhujie.xml</param-value>
+			<!-- eclipse中配置文件的值不一样，
+			将springmvc.xml文件 放到和web.xml文件同级别的目录下
+			然后配置路径是核心配置文件相对于当前工程的目录，如下
+			<param-value>/WEB-INF/springmvc.xml</param-value>
+			-->
+		</init-param>
+		<!-- 用来设定servl加载的时间，
+		不写意味着请求的时候才去加载；
+		写1代表程序启动的时候就去加载（值‘1’的大小代表优先级，值越小优先级越高）；
+		 -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>Controller</servlet-name>
+		<!-- 设置什么样的请求能接收到
+		‘*.action’：所有以.action结尾的请求都能接收到
+		‘/’:所有请求
+		 -->
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 字符集过滤器，解决处理器程序中的中文乱码  -->
+	<filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

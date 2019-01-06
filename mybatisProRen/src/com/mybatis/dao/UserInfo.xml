@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 处理指令：为了解析文件内容，不同功能xml文件的处理指令不同 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间，目的就是对sql进行分类化管理
+	 对应接口的全类名 -->
+<mapper namespace="com.mybatis.dao.UserInfoDAO">  
+
+	<!-- 根据id查询用户信息
+		id属性：接口中对应的方法名
+		 -->
+	<select id="getInfoById" parameterType="Long" resultType="UserInfo">
+		<!-- 注意#{id}中id与参数列表中的Long id对应 -->
+		select * from userinfo where id=#{id}
+	</select>
+	<!-- 根据用户名查询用户信息（模糊查询）
+		注意：当可能返回多条数据的时候resultType类型为集合中的元素类型
+		 -->
+	<select id="getInfoByName" parameterType="String" resultType="UserInfo">
+		select * from UserInfo where username like '%'||#{username}||'%'
+	</select>
+	<!-- 根据用户名和权限查询用户信息
+		Sql语句中赋值的名称是javaBean类中对应的属性的名称
+	 -->
+	<select id="getInfoByNamePer" parameterType="UserInfo" resultType="UserInfo">
+		select * from userinfo where username=#{username} 
+			and permission=#{permission}
+	</select>
+		
+		
+	<!-- 根据id删除用户信息
+		注意：没有返回值类型
+		 -->
+	<delete id="delUserInfo" parameterType="Long">
+		delete from userinfo where id=#{id}
+	</delete>
+	
+	<!-- 根据id修改用户信息  -->
+	<update id="editUserInfoById" parameterType="UserInfo" >
+		update userinfo set username=#{username},
+		password=#{password} where id=#{id}
+	</update>	
+		 
+	<!-- 添加用户信息
+		主键值的生成selectKey元素来完成
+		获取主键列值得两种方式：序列/最大值+1
+	  -->
+	<insert id="addUserInfo" parameterType="UserInfo">
+		<!-- 通过序列生成主键的值，将值赋值给id
+			keyProperty（主键属性）:自动生成的主键的值附给的属性；
+			resultType：以什么样的类型添加到主键
+			order（BEFORE/AFTER）：主键生成的语句和insert语句的执行顺序；
+		 -->
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			<!-- select seq_userinfo_id.nextval from dual  -->
+			select max(id)+1 from userinfo
+		</selectKey>
+		insert into userinfo values(#{id},#{username},#{password},#{permission})
+	</insert>
+	
+	<!-- 根据用户名和权限进行查询（不属于同一个实体） -->
+	<select id="getInfo" parameterType="Map" resultType="UserInfo">
+		select * from userinfo 
+		where username=#{k_username} and permission=#{k_permession}
+	</select>
+	
+	
+	<!-- 数据库没有做相应的调整，以下代码在运行的时候会报错，所以讲核心文件中的注入去掉 -->
+	
+	
+	<!-- 特殊结果集类型的使用：当数据库中的列名和结果集中属性名不一样时的解决办法
+		两种解决方案：1.列别名  3.resultMap中子元素result完成
+	 
+	<select id="getInfo" parameterType="Map" resultMap="UserResult">
+		select * from userinfo 
+		where username=#{k_username} and permission=#{k_permession}
+	</select>
+	 在查询语句执行之前先执行resultMap，
+		id：与resultMap值相同
+		type：最终结果返回的类型
+	   
+	<resultMap id="UserResult" type="UserInfo" >
+		 result子元素
+			property:java类中没有对应上的名字
+			column:数据库中列名
+		 
+		<result property="permission" column="per"/>
+	</resultMap>
+		-->
+	
+	
+	<!-- 查询全部用户信息（分页） -->
+	<select id="getAllByPage" resultType="UserInfo">
+		select * from userinfo
+	</select>
+	
+	<!-- 组合查询 -->
+	<select id="getUserInfo" parameterType="UserInfo" resultType="UserInfo">
+		select * from userinfo
+		<!-- where元素：当元素体内拼接出查询条件时，自动添加where
+				当元素体内没有拼接条件时自动省略where
+		 -->
+		<where>
+			<!-- if元素：进行逻辑判断
+				test属性中声明条件表达式
+				test="id!=null and id!=0"中id为入参UserInfo中属性id，中间用and连接
+			 -->
+			<if test="id!=null and id!=0">
+				and id=#{id}
+			</if>
+			<if test="username!=null and username!='' ">
+				and username=#{username}
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="delUsers" >
+		delete from userinfo where id in
+		<!-- foreach元素实现数组遍历
+			collection：要遍历的对象的数据类型、
+			item：当前遍历到的元素
+			open：遍历以什么开始
+			close：以什么结束
+			separator：分隔符
+		 -->
+		<foreach collection="array" item="item" 
+				 open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+    
+    
